@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Référentiel des procédures ADV</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --primary:#2563eb;
+      --primary-2:#1d4ed8;
+      --shadow: 0 10px 30px rgba(2,6,23,.08);
+      --radius: 18px;
+
+      --ok-bg:#dcfce7; --ok-t:#166534;
+      --warn-bg:#fff7ed; --warn-t:#9a3412;
+      --bad-bg:#fee2e2; --bad-t:#991b1b;
+
+      --tag-bg:#f1f5f9; --tag-t:#334155;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    /* ===== HEADER ===== */
+    header{
+      position:sticky; top:0; z-index:20;
+      background:rgba(255,255,255,.9);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--border);
+    }
+    .topbar{
+      display:flex; gap:14px; align-items:center; justify-content:space-between;
+      padding:16px 18px;
+      max-width:1200px;
+      margin:0 auto;
+    }
+    .brand{
+      display:flex; gap:12px; align-items:center;
+      min-width:240px;
+    }
+    .logo{
+      width:44px; height:44px;
+      border-radius:14px;
+      background:linear-gradient(135deg, #2563eb, #22c55e);
+      box-shadow: var(--shadow);
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-weight:900;
+    }
+    .brand h1{margin:0; font-size:18px; line-height:1.1}
+    .brand .sub{margin:2px 0 0; font-size:12px; color:var(--muted)}
+    .admin-pill{
+      display:none;
+      font-size:12px; font-weight:800;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#fef9c3; color:#854d0e;
+      margin-left:8px;
+      white-space:nowrap;
+    }
+
+    .searchbar{
+      flex:1;
+      display:flex; gap:10px; align-items:center;
+      max-width:560px;
+    }
+    .input{
+      width:100%;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      outline:none;
+      font-size:14px;
+      background:#fff;
+    }
+    .input:focus{ border-color:#94a3b8; box-shadow: 0 0 0 4px rgba(37,99,235,.10); }
+
+    .actions-top{
+      display:flex; gap:10px; align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .btn{
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      font-weight:800;
+      padding:10px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      font-size:13px;
+      text-decoration:none;
+      display:inline-flex; gap:8px; align-items:center;
+      user-select:none;
+    }
+    .btn:hover{ border-color:#cbd5e1; }
+    .btn.primary{
+      background:var(--primary);
+      border-color:var(--primary);
+      color:#fff;
+    }
+    .btn.primary:hover{ background:var(--primary-2); }
+    .btn.ghost{
+      background:transparent;
+    }
+
+    .banner{
+      max-width:1200px;
+      margin:0 auto;
+      padding:0 18px 14px;
+    }
+    .notice{
+      border:1px solid #fde68a;
+      background:#fffbeb;
+      color:#92400e;
+      border-radius:16px;
+      padding:10px 12px;
+      font-size:13px;
+      display:flex; gap:10px; align-items:flex-start;
+    }
+    .notice b{white-space:nowrap}
+    .notice .small{color:#a16207}
+
+    /* ===== LAYOUT ===== */
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:16px 18px 40px;
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap:14px;
+    }
+
+    /* ===== SIDEBAR ===== */
+    aside{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+      height: fit-content;
+      position:sticky;
+      top:94px;
+    }
+    .panel-title{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .panel-title h2{
+      font-size:14px; margin:0; letter-spacing:.2px;
+    }
+    .mini{
+      font-size:12px; color:var(--muted);
+    }
+    .group{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px dashed var(--border);
+    }
+    .group h3{
+      margin:0 0 10px;
+      font-size:12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.8px;
+    }
+    .check{
+      display:flex; align-items:center; gap:10px;
+      padding:6px 6px;
+      border-radius:12px;
+      cursor:pointer;
+    }
+    .check:hover{ background:#f8fafc; }
+    .check input{ transform:scale(1.1); }
+    .check span{
+      font-size:13px;
+    }
+    .select{
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      font-size:13px;
+      outline:none;
+    }
+
+    /* ===== MAIN ===== */
+    main{
+      min-width:0;
+    }
+    .meta-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .counts{
+      font-size:12px;
+      color:var(--muted);
+    }
+    .chips{
+      display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .chip{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--tag-bg);
+      color:var(--tag-t);
+      border:1px solid var(--border);
+      font-size:12px;
+      font-weight:700;
+    }
+    .chip button{
+      border:none; background:transparent; cursor:pointer;
+      font-weight:900; color:#64748b;
+    }
+
+    /* ===== CARDS GRID ===== */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap:12px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-width:0;
+    }
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+      min-width:0;
+    }
+    .title{
+      margin:0;
+      font-size:15px;
+      font-weight:900;
+      line-height:1.25;
+      min-width:0;
+      word-break:break-word;
+    }
+    .star{
+      border:none; background:transparent; cursor:pointer;
+      font-size:18px; line-height:1;
+      flex:0 0 auto;
+    }
+    .meta{
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+    .badges{ display:flex; gap:6px; flex-wrap:wrap; }
+    .badge{
+      font-size:12px;
+      font-weight:800;
+      padding:5px 9px;
+      border-radius:999px;
+      background:var(--tag-bg);
+      color:var(--tag-t);
+      border:1px solid var(--border);
+      display:inline-flex; gap:6px; align-items:center;
+    }
+    .badge.status-ok{ background:var(--ok-bg); color:var(--ok-t); border-color:#bbf7d0;}
+    .badge.status-warn{ background:var(--warn-bg); color:var(--warn-t); border-color:#fed7aa;}
+    .badge.status-bad{ background:var(--bad-bg); color:var(--bad-t); border-color:#fecaca;}
+
+    .desc{
+      margin:0;
+      font-size:13px;
+      color:#334155;
+      line-height:1.4;
+      min-height: 18px;
+    }
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .tag{
+      font-size:12px;
+      padding:4px 8px;
+      border-radius:999px;
+      background:#f1f5f9;
+      color:#475569;
+      border:1px solid var(--border);
+    }
+    .btns{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:auto;
+    }
+
+    mark{ background:#fff3a3; padding:0 2px; border-radius:4px; }
+
+    /* ===== TABLE VIEW ===== */
+    .table-wrap{
+      display:none;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      overflow:auto;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+      min-width:880px;
+    }
+    th, td{
+      padding:10px 12px;
+      border-bottom:1px solid var(--border);
+      text-align:left;
+      vertical-align:top;
+    }
+    th{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      color:var(--muted);
+      background:#f8fafc;
+      position:sticky; top:0;
+    }
+    td .small{ font-size:12px; color:var(--muted); }
+    td .tbtn{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:7px 10px; border-radius:12px;
+      border:1px solid var(--border);
+      background:#fff; cursor:pointer;
+      font-weight:800; font-size:12px;
+      text-decoration:none; color:var(--text);
+      margin-right:6px; margin-top:4px;
+      white-space:nowrap;
+    }
+    td .tbtn.primary{ background:var(--primary); border-color:var(--primary); color:#fff; }
+
+    /* ===== MODAL PREVIEW ===== */
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(2,6,23,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:50;
+    }
+    .modal .box{
+      width:min(1100px, 100%);
+      height:min(720px, 92vh);
+      background:#fff;
+      border-radius:22px;
+      box-shadow: 0 24px 60px rgba(2,6,23,.35);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      border:1px solid var(--border);
+    }
+    .modal .box .mhead{
+      padding:12px 12px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:#fff;
+    }
+    .modal .box .mhead .mtitle{
+      font-weight:900;
+      font-size:13px;
+      color:#0f172a;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .modal .box iframe{
+      width:100%;
+      height:100%;
+      border:none;
+      background:#0b1220;
+    }
+    .icon{
+      display:inline-flex;
+      width:22px; height:22px;
+      align-items:center; justify-content:center;
+      border-radius:8px;
+      background:#f1f5f9;
+      border:1px solid var(--border);
+      font-size:13px;
+    }
+
+    @media (max-width: 980px){
+      .wrap{ grid-template-columns: 1fr; }
+      aside{ position:relative; top:auto; }
+      .topbar{ flex-wrap:wrap; justify-content:flex-start; }
+      .brand{ min-width:auto; }
+      .searchbar{ max-width:none; width:100%; }
+      .actions-top{ width:100%; justify-content:flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">ADV</div>
+      <div>
+        <h1>Référentiel des procédures</h1>
+        <p class="sub">Recherche • filtres • lecture seule • favoris • aperçu PDF</p>
+      </div>
+      <span id="adminPill" class="admin-pill">MODE ADMIN</span>
+    </div>
+
+    <div class="searchbar">
+      <input id="q" class="input" placeholder="Rechercher : Sage, JIRA, SEGUR, résiliation…" />
+    </div>
+
+    <div class="actions-top">
+      <button id="toggleView" class="btn" title="Basculer Cartes/Table">📋 Vue : Cartes</button>
+      <button id="clearAll" class="btn ghost" title="Réinitialiser filtres">🧹 Réinitialiser</button>
+      <button id="openFavs" class="btn" title="Afficher les favoris">⭐ Favoris</button>
+      <button id="openRecents" class="btn" title="Afficher les récents">🕘 Récents</button>
+    </div>
+  </div>
+
+  <div class="banner">
+    <div class="notice">
+      <b>👁️ Mode consultation</b>
+      <div>
+        Cette page est pensée pour la <b>lecture</b> : utilisez le bouton <b>« Lecture »</b> (ouvre en ligne via SharePoint si possible).  
+        <span class="small">La modification se gère par les droits SharePoint.</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ===== SIDEBAR FILTERS ===== -->
+  <aside>
+    <div class="panel-title">
+      <h2>Filtres</h2>
+      <span class="mini" id="miniCount">—</span>
+    </div>
+
+    <div class="group" style="border-top:none; padding-top:0; margin-top:0;">
+      <h3>Tri</h3>
+      <select id="sort" class="select">
+        <option value="recent">+ récent</option>
+        <option value="az">A → Z</option>
+        <option value="fav">Favoris</option>
+      </select>
+    </div>
+
+    <div class="group">
+      <h3>Type</h3>
+      <div id="typeChecks"></div>
+    </div>
+
+    <div class="group">
+      <h3>Statut</h3>
+      <div id="statusChecks"></div>
+    </div>
+
+    <div class="group">
+      <h3>Catégories</h3>
+      <div id="catChecks"></div>
+    </div>
+
+    <div class="group">
+      <h3>Pôles</h3>
+      <div id="poleChecks"></div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main>
+    <div class="meta-row">
+      <div class="counts" id="counts">—</div>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div id="grid" class="grid"></div>
+
+    <div id="tableWrap" class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Procédure</th>
+            <th>Type / Catégorie</th>
+            <th>Statut</th>
+            <th>MAJ</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </main>
+
+</div>
+
+<!-- ===== MODAL PREVIEW (PDF) ===== -->
+<div id="modal" class="modal" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="mhead">
+      <div class="mtitle" id="modalTitle">Prévisualisation</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a id="modalOpen" class="btn primary" target="_blank" rel="noopener">Ouvrir</a>
+        <button id="modalClose" class="btn">Fermer</button>
+      </div>
+    </div>
+    <iframe id="modalFrame" title="Prévisualisation"></iframe>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   CONFIG “LA TOTALE”
+   - 1 fichier HTML
+   - Compatible local + SharePoint + Teams
+   ========================================================= */
+
+/* ✅ Mode admin uniquement pour afficher des boutons “Modifier”
+   ⚠️ La vraie sécurité = permissions SharePoint */
+const ADMIN = new URLSearchParams(location.search).get("admin") === "1";
+document.getElementById("adminPill").style.display = ADMIN ? "inline-flex" : "none";
+
+/* ✅ Données : adapte ici (le reste se met à jour automatiquement)
+   - fichier : chemin relatif OU URL SharePoint complète
+   - readUrl (optionnel) : si tu veux forcer une URL de lecture spécifique
+*/
+const PROCEDURES = [
+    {
+    id: "SEGUR RIS v2",
+    titre: "Mode opératoire – saisie commandes SEGUR RIS v2",
+    type: "pdf",
+    categorie: "SEGUR",
+    pole: ["IMAGERIE"],
+    fichier: "Mode_operatoire_de_saisie_des_commandes_SEGUR V2_SEGUR_RIS_v2.pdf",
+    description: "Mode opératoire pour le couloir SEGUR V2 RIS v2 (pôle imagerie).",
+    motsCles: ["segur","ris","commande","imagerie"],
+    maj: "2025-07-23",
+    statut: "Validée"
+  },
+  {
+    id: "resiliation",
+    titre: "Procédure Résiliation",
+    type: "pdf",
+    categorie: "RESILIATION",
+    pole: ["TRANSVERSE"],
+    fichier: "Resiliation_des_contrats_et_abonnements_client.pdf",
+    description: "Mode opératoire à suivre pour les résiliations client.",
+    motsCles: ["résiliation","resiliation"],
+    maj: "2025-07-22",
+    statut: "Validée"
+  },
+    {
+    id: "Calcul SEGUR RIS v2",
+    titre: "Calcul SEGUR RIS v2",
+    type: "xlsx",
+    categorie: "SEGUR",
+    pole: ["IMAGERIE"],
+    fichier: "Calcul_SEGUR_SEGUR_RIS_v2.xlsx",
+    description: "Méthode calcul et articles pour saisie Sage",
+    motsCles: ["SEGUR","RIS v2","RIS","Sage"],
+    maj: "2025-07-23",
+    statut: "Validée"
+  },
+  {
+    id: "bcb",
+    titre: "Procédures BCB",
+    type: "pdf",
+    categorie: "BCB/VIDAL",
+    pole: ["TRANSVERSE"],
+    fichier: "Procedures_BCB.pdf",
+    description: "Import codes BCB, création ticket, workflow, etc.",
+    motsCles: ["bcb","eudonet","jira","import","licences"],
+    maj: "2025-05-12",
+    statut: "Validée"
+  },
+  {
+    id: "SEGUR DRIMBOX",
+    titre: "Mode opératoire – saisie commandes SEGUR DRIMBOX",
+    type: "pdf",
+    categorie: "SEGUR",
+    pole: ["IMAGERIE"],
+    fichier: "Mode_operatoire_de_saisie_des_commandes_SEGUR V2_SEGUR_DRIMBOX.pdf",
+    description: "Mode opératoire pour le couloir SEGUR DRIMBOX",
+    motsCles: ["segur","drimbox","commande","imagerie","sage"],
+    maj: "2025-07-23",
+    statut: "Validée"
+  },
+  {
+    id: "SEGUR DRIMBOX EXCEL",
+    titre: "Calcul SEGUR DRIMBOX",
+    type: "xlsx",
+    categorie: "SEGUR",
+    pole: ["IMAGERIE"],
+    fichier: "Calcul_SEGUR_SEGUR_DRIMBOX.xlsx",
+    description: "Méthode calcul et articles pour saisie Sage",
+    motsCles: ["SEGUR","DRIMBOX","drim","Sage"],
+    maj: "2025-07-23",
+    statut: "Validée"
+  },
+    {
+    id: "SEGUR OSIRIS DPI (DPI v2) EXCEL",
+    titre: "Calcul SEGUR DPI v2",
+    type: "xlsx",
+    categorie: "SEGUR",
+    pole: ["DPI"],
+    fichier: "Calcul_SEGUR_OSIRIS_DPI_v2.xlsx",
+    description: "Méthode calcul et articles pour saisie Sage",
+    motsCles: ["SEGUR","DPI v2","DPI","Sage"],
+    maj: "2025-06-23",
+    statut: "Validée"
+  },
+    {
+    id: "SEGUR OSIRIS DPI (DPI v2)",
+    titre: "Mode opératoire – saisie commandes SEGUR OSIRIS DPI (DPI v2)",
+    type: "pdf",
+    categorie: "SEGUR",
+    pole: ["DPI"],
+    fichier: "Mode_operatoire_de_saisie_des_commandes_SEGUR_OSIRIS_DPI_SEGUR_DPI_v2.pdf",
+    description: "Mode opératoire pour le couloir SEGUR OSIRIS DPI (DPI v2)",
+    motsCles: ["segur","DPI","commande","DPI v2","sage"],
+    maj: "2025-06-23",
+    statut: "Validée"
+  },
+    {
+    id: "Validation factures fournisseurs",
+    titre: "Mode opératoire – saisie et contrôle des factures achat",
+    type: "pdf",
+    categorie: "FOURNISSEUR",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_saisie_des_factures_achats_fournisseurs.pdf",
+    description: "Mode opératoire pour la saisie et le contrôle des factures achat / fournisseur",
+    motsCles: ["achat","fournisseur","contrôle","saisie","sage"],
+    maj: "2026-02-19",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire envoi des factures depuis Sage",
+    titre: "Mode opératoire envoi des factures depuis Sage",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_Envoi_des_factures_dematérialisees_depuis_Sage.pdf",
+    description: "Mode opératoire pour l'envoi des factures depuis Sage",
+    motsCles: ["clien","envoi","démat","sage"],
+    maj: "2025-02-10",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire traitement VIDAL",
+    titre: "Mode opératoire traitement VIDAL",
+    type: "pdf",
+    categorie: "BCB/VIDAL",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_traitement_VIDAL.pdf",
+    description: "Mode opératoire pour la saisie la commande et la facturation VIDAL",
+    motsCles: ["achat","fournisseur","VIDAL","sage"],
+    maj: "2026-04-29",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire commande BEEMO",
+    titre: "Mode opératoire commande BEEMO",
+    type: "pdf",
+    categorie: "FOURNISSEUR",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_commandes_BEEMO.pdf",
+    description: "Mode opératoire pour la saisie des commandes BEEMO",
+    motsCles: ["achat","fournisseur","BEEMO","sage"],
+    maj: "2025-04-03",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire nouveau client Sage",
+    titre: "Mode opératoire création nouveau client Sage",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_nouveau_client_sage.pdf",
+    description: "Mode opératoire pour la création d'un nouveau client dans Sage",
+    motsCles: ["client","création","fiche","sage"],
+    maj: "2024-11-27",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire MONMAILSANTE",
+    titre: "Mode opératoire traitement commande MONMAILSANTE",
+    type: "pdf",
+    categorie: "COMMANDE",
+    pole: ["MS"],
+    fichier: "Mode_operatoire_traitement_MONMAILSANTE.pdf",
+    description: "Mode opératoire pour le traitement d'une commande MONMAILSANTE",
+    motsCles: ["client","MMS","MONMAILSANTE","sage"],
+    maj: "2024-10-29",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire - mandat",
+    titre: "Mode opératoire gestion des mandats via projet JIRA",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_Gestion_des_mandats_via_JIRA.pdf",
+    description: "Mode opératoire pour le traitement des mandat via JIRA",
+    motsCles: ["client","mandat","jira","sage"],
+    maj: "2025-06-02",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire BAG Chorus",
+    titre: "Mode opératoire traitement BAG CHORUS",
+    type: "pdf",
+    categorie: "BAG",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_traitement_BAG_Chorus.pdf",
+    description: "Mode opératoire pour le traitement de la BAG CHORUS",
+    motsCles: ["client","BAG","recouvrement","chorus"],
+    maj: "2026-01-01",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire fdp",
+    titre: "Mode opératoire facturation frais de déplacement",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_Facturation_des_frais_de_deplacement_et_hebergement.pdf",
+    description: "Mode opératoire facturation frais de déplacement et hébergement",
+    motsCles: ["client","facture","frais","formation"],
+    maj: "2025-05-23",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire MIPIH",
+    titre: "Mode opératoire traitement hébergement - MIPIH",
+    type: "pdf",
+    categorie: "FOURNISSEUR",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_declenchement_hebergement_et_enregistrement_factures_MIPIH.pdf",
+    description: "Mode opératoire pour le traitement des hébergements MIPIH",
+    motsCles: ["fournisseur","mipih","hébergement","facture"],
+    maj: "2024-04-02",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire SSL",
+    titre: "Mode opératoire traitement certificat SSL et Nom de domaine",
+    type: "pdf",
+    categorie: "FOURNISSEUR",
+    pole: ["IMAGERIE"],
+    fichier: "PROCEDURE_CERTIFICAT_SSL_NOM_DE_DOMAINE.pdf",
+    description: "Mode opératoire traitement certificat SSL et Nom de domaine",
+    motsCles: ["ssl","ndd","nom","domaine"],
+    maj: "2026-04-30",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire activation portail",
+    titre: "Mode opératoire traitement forfait activation portail de soins",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["DPI"],
+    fichier: "Découpage_forfaits_activation_portail_de_soins_V3.pdf",
+    description: "Mode opératoire traitement commande forfait activation portail de soins",
+    motsCles: ["portail","soin","activation","commande"],
+    maj: "2026-04-30",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire commande B2",
+    titre: "Mode opératoire traitement commande signature des lots B2",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["DPI"],
+    fichier: "Mode_operatoire_saisie_commande_connecteur_signature_des_lots_b2.pdf",
+    description: "Mode opératoire traitement commande connecteur signature des lots B2",
+    motsCles: ["connecteur","lots","b2","commande"],
+    maj: "2024-09-11",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire commande coupes serafin ph",
+    titre: "Mode opératoire traitement commande Coupes Serafin PH",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["DPI"],
+    fichier: "Mode_operatoire_Commande_Coupes_Serafin_PH.pdf",
+    description: "Mode opératoire traitement commande coupes Serafin PH",
+    motsCles: ["commmande","serafin","PH","client"],
+    maj: "2025-02-12",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire JFSE",
+    titre: "Mode opératoire ajout JFSE",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_ajout_jfse.pdf",
+    description: "Mode opératoire pour le traitement des JFSE",
+    motsCles: ["fournisseur","client","jfse","imagerie"],
+    maj: "2026-04-30",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire ROC",
+    titre: "Mode opératoire commande dispositif ROC",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["DPI"],
+    fichier: "Mode_operatoire_commande_Dispositif_ROC.pdf",
+    description: "Mode opératoire traitement des commandes dispositif ROC",
+    motsCles: ["commande","roc","sage","dispositif"],
+    maj: "2024-09-23",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire dépôts factures SMLB",
+    titre: "Mode opératoire dépôts factures SMLB",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["TRANSVERSE"],
+    fichier: "Procedure_depot_factures_SMLB.pdf",
+    description: "Mode opératoire pour le dépôt des factures SMLB",
+    motsCles: ["client","dépôt","smlb","plateforme"],
+    maj: "2021-11-18",
+    statut: "Validée"
+  },
+    {
+    id: "Mode opératoire MAJ Client Sage",
+    titre: "Mode opératoire mise à jour client Sage",
+    type: "pdf",
+    categorie: "CLIENT",
+    pole: ["TRANSVERSE"],
+    fichier: "Mode_operatoire_Reception_et_traitement_des_courriers_mise_a_jour_de_la_base_de_donnees.pdf",
+    description: "Mode opératoire pour le traitement des courriers de mise à jour de la base client Sage",
+    motsCles: ["client","sage"],
+    maj: "2024-10-29",
+    statut: "Validée"
+  },
+    {
+    id: "SEGUR OSIRIS PFI (PFI v2)",
+    titre: "Mode opératoire – saisie commandes SEGUR OSIRIS PFI (PFI v2)",
+    type: "pdf",
+    categorie: "SEGUR",
+    pole: ["DPI"],
+    fichier: "Mode_operatoire_de_saisie_des_commandes_SEGUR_OSIRIS_PFI_SEGUR_PFI_v2.pdf",
+    description: "Mode opératoire pour le couloir SEGUR OSIRIS PFI (PFI v2)",
+    motsCles: ["segur","PFI","commande","PFI v2","sage"],
+    maj: "2024-10-29",
+    statut: "Validée"
+  },
+    {
+    id: "SEGUR HOPITALWEB PFI (PFI v2)",
+    titre: "Mode opératoire – saisie commandes SEGUR HOPITALWEB PFI (PFI v2)",
+    type: "pdf",
+    categorie: "SEGUR",
+    pole: ["DPI"],
+    fichier: "Mode_operatoire_de_saisie_des_commandes_SEGUR_HOPITALWEB_PFI_SEGUR_PFI_v2.pdf",
+    description: "Mode opératoire pour le couloir SEGUR HOPITALWEB PFI (PFI v2)",
+    motsCles: ["segur","PFI","commande","PFI v2","sage"],
+    maj: "2025-02-26",
+    statut: "Validée"
+  },
+    {
+    id: "SEGUR HOPITALWEB DPI (DPI v2)",
+    titre: "Mode opératoire – saisie commandes SEGUR HOPITALWEB DPI (DPI v2)",
+    type: "pdf",
+    categorie: "SEGUR",
+    pole: ["DPI"],
+    fichier: "Mode_operatoire_de_saisie_des_commandes_SEGUR_HOPITALWEB_DPI_SEGUR_DPI_v2.pdf",
+    description: "Mode opératoire pour le couloir SEGUR HOPITALWEB DPI (DPI v2)",
+    motsCles: ["segur","PFI","commande","PFI v2","sage"],
+    maj: "2025-11-18",
+    statut: "Validée"
+  }
+
+  /* Exemple Outlook : ouverture via fichier .msg (Outlook installé)
+  {
+    id:"mail_segur_ris",
+    titre:"Mail Outlook – Mode opératoire SEGUR RIS v2",
+    type:"Outlook",
+    categorie:"SEGUR",
+    application:["Outlook"],
+    fichier:"Outlook/mode_operatoire_segur_ris_v2.msg",
+    description:"Message Outlook archivé (ouvrir dans Outlook).",
+    motsCles:["outlook","segur","ris"],
+    maj:"2025-07-22",
+    statut:"Validée",
+    owner:"Lead ADV"
+  }
+  */
+];
+
+/* =========================
+   Stockages locaux
+   ========================= */
+const LS = {
+  fav: "adv_procedures_favs_v2",
+  recent: "adv_procedures_recent_v2",
+  view: "adv_procedures_view_v2",
+  lastFilters: "adv_procedures_filters_v2"
+};
+const favs = new Set(JSON.parse(localStorage.getItem(LS.fav) || "[]"));
+const recents = JSON.parse(localStorage.getItem(LS.recent) || "[]"); // [{id, ts}]
+let viewMode = localStorage.getItem(LS.view) || "cards"; // cards|table
+
+/* =========================
+   Helpers
+   ========================= */
+const $ = (id)=>document.getElementById(id);
+
+function norm(s=""){
+  return s.toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+}
+function escapeHtml(s=""){
+  return s.toString()
+    .replaceAll("&","&amp;").replaceAll("<","&lt;")
+    .replaceAll(">","&gt;").replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function extFromTypeOrFile(p){
+  const t = (p.type||"").toLowerCase();
+  if(["excel","word","pdf","outlook"].includes(t)) return t;
+  const f=(p.fichier||"").toLowerCase();
+  if(f.endsWith(".pdf")) return "pdf";
+  if(f.endsWith(".xlsx")||f.endsWith(".xlsm")||f.endsWith(".xls")) return "excel";
+  if(f.endsWith(".docx")||f.endsWith(".doc")) return "word";
+  if(f.endsWith(".msg")) return "outlook";
+  return "file";
+}
+function iconFor(p){
+  const t = extFromTypeOrFile(p);
+  if(t==="excel") return "📊";
+  if(t==="word") return "📝";
+  if(t==="pdf") return "📄";
+  if(t==="outlook") return "📧";
+  return "📎";
+}
+function statusClass(st){
+  const s = norm(st||"");
+  if(s.includes("valide")) return "status-ok";
+  if(s.includes("obsol")) return "status-bad";
+  if(s.includes("mettre a jour") || s.includes("maj")) return "status-warn";
+  return "";
+}
+function isAbsoluteUrl(u=""){
+  return /^https?:\/\//i.test(u);
+}
+function addQuery(url, key, value="1"){
+  if(!url) return url;
+  const hasQ = url.includes("?");
+  const sep = hasQ ? "&" : "?";
+  return url + sep + encodeURIComponent(key) + "=" + encodeURIComponent(value);
+}
+function buildReadUrl(p){
+  // priorité à readUrl si fourni
+  if(p.readUrl) return p.readUrl;
+
+  const u = p.fichier || "";
+  const t = extFromTypeOrFile(p);
+
+  // si local file://, on ne peut pas “forcer” Excel Online
+  if(location.protocol === "file:") return u;
+
+  // si URL SharePoint/OneDrive (http/https), on force web=1 pour Office
+  if(isAbsoluteUrl(u)){
+    if(t==="excel" || t==="word"){
+      if(!/[\?&]web=1\b/i.test(u)) return addQuery(u, "web", "1");
+    }
+    return u;
+  }
+
+  // lien relatif sur SharePoint : même logique (web=1 pour Office)
+  if(t==="excel" || t==="word"){
+    return addQuery(u, "web", "1");
+  }
+  return u;
+}
+function buildOpenUrl(p){
+  return p.fichier || "";
+}
+function highlight(text, q){
+  if(!q) return escapeHtml(text);
+  const safe = escapeHtml(text);
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})`, "ig");
+  return safe.replace(re, "<mark>$1</mark>");
+}
+function saveFavs(){
+  localStorage.setItem(LS.fav, JSON.stringify([...favs]));
+}
+function pushRecent(id){
+  const now = Date.now();
+  const filtered = recents.filter(x=>x.id!==id);
+  filtered.unshift({id, ts: now});
+  const sliced = filtered.slice(0, 25);
+  localStorage.setItem(LS.recent, JSON.stringify(sliced));
+}
+async function copyToClipboard(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    toast("Lien copié ✅");
+  }catch(e){
+    toast("Impossible de copier (droits navigateur) ⚠️");
+  }
+}
+
+/* =========================
+   UI: toast minimal
+   ========================= */
+let toastTimer=null;
+function toast(msg){
+  let el = document.getElementById("toast");
+  if(!el){
+    el = document.createElement("div");
+    el.id="toast";
+    el.style.position="fixed";
+    el.style.bottom="16px";
+    el.style.left="50%";
+    el.style.transform="translateX(-50%)";
+    el.style.background="rgba(15,23,42,.92)";
+    el.style.color="#fff";
+    el.style.padding="10px 12px";
+    el.style.borderRadius="14px";
+    el.style.fontSize="13px";
+    el.style.fontWeight="800";
+    el.style.zIndex="60";
+    el.style.boxShadow="0 14px 40px rgba(2,6,23,.3)";
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.display="block";
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{ el.style.display="none"; }, 1400);
+}
+
+/* =========================
+   State filtres
+   ========================= */
+const state = {
+  q: "",
+  sort: "recent",
+  types: new Set(),
+  status: new Set(),
+  cats: new Set(),
+  poles: new Set(),
+  focus: "all" // all|favs|recents
+};
+
+/* Restore last filters if present */
+try{
+  const saved = JSON.parse(localStorage.getItem(LS.lastFilters) || "null");
+  if(saved){
+    state.q = saved.q || "";
+    state.sort = saved.sort || "recent";
+    ["types","status","cats","poles"].forEach(k=>{
+      if(Array.isArray(saved[k])) state[k]=new Set(saved[k]);
+    });
+    state.focus = saved.focus || "all";
+  }
+}catch(_){}
+
+/* =========================
+   Build dynamic filters from data
+   ========================= */
+const allTypes = [...new Set(PROCEDURES.map(p=> (p.type||"").trim()).filter(Boolean))]
+  .map(x=>x==="pdf"?"pdf":x).sort((a,b)=>a.localeCompare(b,"fr"));
+const allStatus = [...new Set(PROCEDURES.map(p=> (p.statut||"").trim()).filter(Boolean))]
+  .sort((a,b)=>a.localeCompare(b,"fr"));
+const allCats = [...new Set(PROCEDURES.map(p=> (p.categorie||"").trim()).filter(Boolean))]
+  .sort((a,b)=>a.localeCompare(b,"fr"));
+const allpoles = [...new Set(PROCEDURES.flatMap(p=>p.pole||[]).map(x=>x.trim()).filter(Boolean))]
+  .sort((a,b)=>a.localeCompare(b,"fr"));
+
+function renderChecks(containerId, values, setRef, kind){
+  const box = $(containerId);
+  box.innerHTML = "";
+  values.forEach(v=>{
+    const id = `${containerId}_${norm(v).replaceAll(" ","_")}`;
+    const wrap = document.createElement("label");
+    wrap.className="check";
+    wrap.innerHTML = `
+      <input type="checkbox" id="${id}" ${setRef.has(v) ? "checked":""}/>
+      <span>${escapeHtml(v)}</span>
+    `;
+    wrap.querySelector("input").addEventListener("change",(e)=>{
+      if(e.target.checked) setRef.add(v); else setRef.delete(v);
+      state.focus = "all";
+      persistFilters();
+      render();
+    });
+    box.appendChild(wrap);
+  });
+}
+
+function persistFilters(){
+  localStorage.setItem(LS.lastFilters, JSON.stringify({
+    q: state.q,
+    sort: state.sort,
+    types: [...state.types],
+    status: [...state.status],
+    cats: [...state.cats],
+    poles: [...state.poles],
+    focus: state.focus
+  }));
+}
+
+/* =========================
+   Filter + sort logic
+   ========================= */
+function matches(p){
+  // focus
+  if(state.focus==="favs" && !favs.has(p.id)) return false;
+  if(state.focus==="recents"){
+    const ids = new Set(recents.map(x=>x.id));
+    if(!ids.has(p.id)) return false;
+  }
+
+  // checkbox filters
+  if(state.types.size && !state.types.has(p.type)) return false;
+  if(state.status.size && !state.status.has(p.statut)) return false;
+  if(state.cats.size && !state.cats.has(p.categorie)) return false;
+  if(state.poles.size){
+    const poles = new Set((p.pole||[]));
+    let ok=false;
+    state.poles.forEach(a=>{ if(poles.has(a)) ok=true; });
+    if(!ok) return false;
+  }
+
+  // query
+  const q = state.q.trim();
+  if(!q) return true;
+  const hay = norm([
+    p.titre, p.description,
+    (p.motsCles||[]).join(" "),
+    (p.pole||[]).join(" "),
+    p.categorie, p.type, p.statut, p.owner
+  ].join(" "));
+  return hay.includes(norm(q));
+}
+
+function sortList(list){
+  if(state.sort==="az"){
+    list.sort((a,b)=>a.titre.localeCompare(b.titre,"fr"));
+  }else if(state.sort==="fav"){
+    list.sort((a,b)=>(favs.has(b.id)-favs.has(a.id)) || a.titre.localeCompare(b.titre,"fr"));
+  }else{ // recent by maj then title
+    list.sort((a,b)=> ( (b.maj||"").localeCompare(a.maj||"") ) || a.titre.localeCompare(b.titre,"fr"));
+  }
+  return list;
+}
+
+/* =========================
+   Modal preview (PDF)
+   ========================= */
+const modal = $("modal");
+const modalTitle = $("modalTitle");
+const modalFrame = $("modalFrame");
+const modalOpen = $("modalOpen");
+$("modalClose").addEventListener("click", closeModal);
+modal.addEventListener("click",(e)=>{ if(e.target===modal) closeModal(); });
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeModal(); });
+
+function openModal(title, url){
+  modalTitle.textContent = title;
+  modalOpen.href = url;
+  modalFrame.src = url;
+  modal.style.display = "flex";
+}
+function closeModal(){
+  modal.style.display = "none";
+  modalFrame.src = "about:blank";
+}
+
+/* =========================
+   Rendering (cards + table)
+   ========================= */
+const grid = $("grid");
+const tableWrap = $("tableWrap");
+const tbody = $("tbody");
+const chips = $("chips");
+const counts = $("counts");
+const miniCount = $("miniCount");
+
+function renderChips(){
+  chips.innerHTML = "";
+  const addChip = (label, onRemove)=>{
+    const c = document.createElement("span");
+    c.className="chip";
+    c.innerHTML = `${escapeHtml(label)} <button title="Retirer">✕</button>`;
+    c.querySelector("button").addEventListener("click", onRemove);
+    chips.appendChild(c);
+  };
+
+  if(state.focus==="favs") addChip("⭐ Favoris", ()=>{ state.focus="all"; persistFilters(); render(); });
+  if(state.focus==="recents") addChip("🕘 Récents", ()=>{ state.focus="all"; persistFilters(); render(); });
+
+  if(state.q.trim()) addChip(`🔎 ${state.q.trim()}`, ()=>{ state.q=""; $("q").value=""; persistFilters(); render(); });
+  [...state.types].forEach(v=> addChip(`Type: ${v}`, ()=>{ state.types.delete(v); syncChecks(); persistFilters(); render(); }));
+  [...state.status].forEach(v=> addChip(`Statut: ${v}`, ()=>{ state.status.delete(v); syncChecks(); persistFilters(); render(); }));
+  [...state.cats].forEach(v=> addChip(`Cat: ${v}`, ()=>{ state.cats.delete(v); syncChecks(); persistFilters(); render(); }));
+  [...state.poles].forEach(v=> addChip(`Pole: ${v}`, ()=>{ state.poles.delete(v); syncChecks(); persistFilters(); render(); }));
+}
+
+function syncChecks(){
+  // re-render all check sections with current sets
+  renderChecks("typeChecks", allTypes.length?allTypes:["Excel","Word","PDF","Outlook"], state.types, "type");
+  renderChecks("statusChecks", allStatus, state.status, "status");
+  renderChecks("catChecks", allCats, state.cats, "cat");
+  renderChecks("poleChecks", allpoles, state.poles, "pole");
+}
+
+function cardActions(p){
+  const openUrl = buildOpenUrl(p);
+  const readUrl = buildReadUrl(p);
+  const ext = extFromTypeOrFile(p);
+
+  const canPreview = (ext==="pdf") && (openUrl || readUrl);
+  const previewBtn = canPreview
+    ? `<button class="btn" onclick="preview('${escapeHtml(p.titre)}','${escapeHtml(readUrl)}','${escapeHtml(p.id)}')">👀 Aperçu</button>`
+    : "";
+
+  const editBtn = ADMIN
+    ? `<a class="btn" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">✏️ Modifier</a>`
+    : "";
+
+  // “Lecture” = privilégier readUrl (web=1 si possible)
+  const readBtn = `<a class="btn primary" href="${escapeHtml(readUrl)}" target="_blank" rel="noopener" onclick="opened('${escapeHtml(p.id)}')">👁️ Lecture</a>`;
+  const openBtn = `<a class="btn" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener" onclick="opened('${escapeHtml(p.id)}')">📂 Fichier</a>`;
+
+  const copyRead = `<button class="btn" onclick="copy('${escapeHtml(readUrl)}')">🔗 Copier lien</button>`;
+
+  return `
+    ${readBtn}
+    ${openBtn}
+    ${previewBtn}
+    ${copyRead}
+    ${editBtn}
+  `;
+}
+
+function renderCards(list){
+  grid.innerHTML = "";
+  list.forEach(p=>{
+    const q = state.q.trim();
+    const star = favs.has(p.id) ? "⭐" : "☆";
+    const icon = iconFor(p);
+    const stClass = statusClass(p.statut);
+    const poles = (p.pole||[]).map(a=>`<span class="tag">${escapeHtml(a)}</span>`).join("");
+    const keys = (p.motsCles||[]).slice(0,6).map(k=>`<span class="tag">${escapeHtml(k)}</span>`).join("");
+    const typeBadge = `<span class="badge"><span class="icon">${icon}</span>${escapeHtml(p.type||"—")}</span>`;
+    const catBadge = p.categorie ? `<span class="badge">🗂️ ${escapeHtml(p.categorie)}</span>` : "";
+    const stBadge = p.statut ? `<span class="badge ${stClass}">🧾 ${escapeHtml(p.statut)}</span>` : "";
+    const maj = p.maj ? `🕒 MAJ ${escapeHtml(p.maj)}` : "🕒 MAJ —";
+    const owner = p.owner ? `• 👤 ${escapeHtml(p.owner)}` : "";
+
+    grid.insertAdjacentHTML("beforeend", `
+      <div class="card">
+        <div class="row">
+          <p class="title">${highlight(p.titre||"", q)}</p>
+          <button class="star" title="Favori" onclick="fav('${escapeHtml(p.id)}')">${star}</button>
+        </div>
+
+        <div class="badges">
+          ${typeBadge}
+          ${catBadge}
+          ${stBadge}
+        </div>
+
+        <div class="meta">${maj} ${owner}</div>
+
+        <p class="desc">${highlight(p.description||"", q)}</p>
+
+        <div class="tags">${poles}${keys}</div>
+
+        <div class="btns">
+          ${cardActions(p)}
+        </div>
+      </div>
+    `);
+  });
+}
+
+function renderTable(list){
+  tbody.innerHTML = "";
+  const q = state.q.trim();
+  list.forEach(p=>{
+    const icon = iconFor(p);
+    const stClass = statusClass(p.statut);
+    const readUrl = buildReadUrl(p);
+    const openUrl = buildOpenUrl(p);
+
+    const statusHtml = p.statut
+      ? `<span class="badge ${stClass}">${escapeHtml(p.statut)}</span>`
+      : `<span class="badge">—</span>`;
+
+    const editBtn = ADMIN
+      ? `<a class="tbtn" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">✏️ Modifier</a>`
+      : "";
+
+    const previewBtn = (extFromTypeOrFile(p)==="pdf")
+      ? `<button class="tbtn" onclick="preview('${escapeHtml(p.titre)}','${escapeHtml(readUrl)}','${escapeHtml(p.id)}')">👀 Aperçu</button>`
+      : "";
+
+    tbody.insertAdjacentHTML("beforeend", `
+      <tr>
+        <td>
+          <div style="font-weight:900">${highlight(p.titre||"", q)}</div>
+          <div class="small">${highlight(p.description||"", q)}</div>
+        </td>
+        <td>
+          <div class="badge"><span class="icon">${icon}</span>${escapeHtml(p.type||"—")}</div>
+          <div class="small" style="margin-top:6px;">🗂️ ${escapeHtml(p.categorie||"—")}</div>
+        </td>
+        <td>${statusHtml}</td>
+        <td><div class="small">${escapeHtml(p.maj||"—")}</div></td>
+        <td>
+          <a class="tbtn primary" href="${escapeHtml(readUrl)}" target="_blank" rel="noopener" onclick="opened('${escapeHtml(p.id)}')">👁️ Lecture</a>
+          <a class="tbtn" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener" onclick="opened('${escapeHtml(p.id)}')">📂 Fichier</a>
+          ${previewBtn}
+          <button class="tbtn" onclick="copy('${escapeHtml(readUrl)}')">🔗 Copier lien</button>
+          ${editBtn}
+        </td>
+      </tr>
+    `);
+  });
+}
+
+function render(){
+  // list filtered
+  let list = PROCEDURES.filter(matches);
+  list = sortList(list);
+
+  // counts
+  counts.textContent = `${list.length} affichées / ${PROCEDURES.length} au total`;
+  miniCount.textContent = `${list.length}/${PROCEDURES.length}`;
+  renderChips();
+
+  // view
+  if(viewMode==="table"){
+    $("toggleView").textContent = "🧩 Vue : Table";
+    grid.style.display = "none";
+    tableWrap.style.display = "block";
+    renderTable(list);
+  }else{
+    $("toggleView").textContent = "📋 Vue : Cartes";
+    tableWrap.style.display = "none";
+    grid.style.display = "grid";
+    renderCards(list);
+  }
+}
+
+/* =========================
+   Global functions (used inline)
+   ========================= */
+window.fav = (id)=>{
+  if(favs.has(id)) favs.delete(id); else favs.add(id);
+  saveFavs();
+  toast(favs.has(id) ? "Ajouté aux favoris ⭐" : "Retiré des favoris ☆");
+  render();
+};
+window.copy = (url)=> copyToClipboard(url);
+window.opened = (id)=>{ pushRecent(id); };
+window.preview = (title, url, id)=>{
+  pushRecent(id);
+  openModal(title, url);
+};
+
+/* =========================
+   Init UI + events
+   ========================= */
+$("q").value = state.q;
+$("sort").value = state.sort;
+
+$("q").addEventListener("input",(e)=>{
+  state.q = e.target.value;
+  state.focus = "all";
+  persistFilters();
+  render();
+});
+$("sort").addEventListener("change",(e)=>{
+  state.sort = e.target.value;
+  persistFilters();
+  render();
+});
+
+$("toggleView").addEventListener("click",()=>{
+  viewMode = (viewMode==="cards") ? "table" : "cards";
+  localStorage.setItem(LS.view, viewMode);
+  render();
+});
+
+$("clearAll").addEventListener("click",()=>{
+  state.q=""; $("q").value="";
+  state.sort="recent"; $("sort").value="recent";
+  state.types.clear(); state.status.clear(); state.cats.clear(); state.poles.clear();
+  state.focus="all";
+  syncChecks();
+  persistFilters();
+  toast("Filtres réinitialisés 🧹");
+  render();
+});
+
+$("openFavs").addEventListener("click",()=>{
+  state.focus = (state.focus==="favs") ? "all" : "favs";
+  persistFilters();
+  render();
+});
+$("openRecents").addEventListener("click",()=>{
+  state.focus = (state.focus==="recents") ? "all" : "recents";
+  persistFilters();
+  render();
+});
+
+/* Build checks */
+syncChecks();
+
+/* Apply sets restored from storage to checks (already done in syncChecks) */
+render();
+
+/* ✅ Petite aide : si quelqu’un clique “Lecture” sur un fichier local,
+   cela ouvrira localement. Sur SharePoint, “Lecture” forcera web=1. */
+</script>
+</body>
+</html>
